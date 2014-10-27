@@ -105,13 +105,13 @@ Table.prototype.draw = function(ctx) {
     var vCenter = y;
     var rectWidth = toInteger(.13 * canvasWidth);
     var margin = toInteger(.07 * canvasWidth);
-    var cardLeft = toInteger(0.323 * canvasWidth);
+    var cardLeft = toInteger(0.338 * canvasWidth);
     var cardRight = toInteger(0.7 * canvasWidth);
     var cardTop = toInteger(0.38 * canvasWidth);
     var cardBottom = toInteger(0.3 * canvasWidth + cardTop);
     var cardWidth = toInteger(0.05 * canvasWidth);
     var cardHeight = toInteger(0.07 * canvasWidth);
-    var cardMargin = toInteger(0.01 * canvasWidth);
+    var cardMargin = toInteger(0.016 * canvasWidth);
     if(p1) {
       numPlayers++;
       ctx.fillRect(hCenter - rectWidth / 2, margin, rectWidth, rectWidth);
@@ -129,7 +129,7 @@ Table.prototype.draw = function(ctx) {
       ctx.fillRect(hCenter - rectWidth / 2, canvasHeight - (margin + rectWidth), rectWidth, rectWidth);
     }
 
-    if(numPlayers > 1) {
+    if(numPlayers >= 4) {
       for(var cTop = cardTop; cTop + cardHeight < cardBottom; cTop = cTop + cardHeight + cardMargin) {
         for(var cLeft = cardLeft; cLeft + cardWidth < cardRight; cLeft = cLeft + cardWidth + cardMargin) {
           ctx.fillRect(cLeft, cTop, cardWidth, cardHeight);
@@ -208,19 +208,17 @@ $(document).ready(function () {
       $('.filled-message').hide();
       $('.time-passed').hide();
       $('.weekend').hide();
+
       if(weekDay === 0 || weekDay === 6) {
         $('.weekend').show();
-      }
-      else if(today > gameTime) {
-        $('.tomorrow').show();
-
-        //$('.time-passed').show();
-        $('.theButton').show();
       }
       else if(playerCount >= 4 && !currentPlayerIsSignedUp) {
         $('.filled-message').show();
       }
       else {
+        if(today > gameTime) {
+          $('.tomorrow').show();
+        }
         $('.theButton').show();
       }
     }
@@ -304,4 +302,33 @@ $(document).ready(function () {
       return "";
     }
   };
+
+  var ClearPlayer = function(playerName) {
+      var todayRef = fb.child(todayString);
+      _this.game[playerName] = "";
+      todayRef.set(_this.game);
+  }
+
+  var timeoutId = 0;
+  $('.playerOne').mousedown(function() {
+    timeoutId = setTimeout(ClearPlayer, 2000, 'playerOne');
+  }).bind('mouseup mouseleave', function() {
+    clearTimeout(timeoutId);
+  });
+  $('.playerTwo').mousedown(function() {
+    timeoutId = setTimeout(ClearPlayer, 2000, 'playerTwo');
+  }).bind('mouseup mouseleave', function() {
+    clearTimeout(timeoutId);
+  });
+  $('.playerThree').mousedown(function() {
+    timeoutId = setTimeout(ClearPlayer, 2000, 'playerThree');
+  }).bind('mouseup mouseleave', function() {
+    clearTimeout(timeoutId);
+  });
+  $('.playerFour').mousedown(function() {
+    timeoutId = setTimeout(ClearPlayer, 2000, 'playerFour');
+  }).bind('mouseup mouseleave', function() {
+    clearTimeout(timeoutId);
+  });
+
 });

@@ -1,0 +1,64 @@
+* {
+  font-family: "Myriad Set Pro","Lucida Grande","Helvetica Neue","Helvetica","Arial","Verdana","sans-serif";
+}
+
+h1 {
+  font-weight: 400;
+  margin-bottom: 0px;
+}
+
+canvas {
+  border: none;
+}
+
+table {
+}
+
+table td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+table td p {
+  display: inline-block;
+  width: 60px;
+  vertical-align: middle;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+table td p {
+}
+
+.button {
+  padding: 6px;
+  text-align: center;
+  color: white;
+  font-size: 1.2em;
+  font-weight: 100;
+  cursor: pointer;
+  width: 420px;
+  margin-top: 10px;
+}
+
+.submit {
+  background-color: #9AC9EE;
+}
+
+.exit {
+  background-color: #cc0000;
+}
+
+.details {
+  font-style: italic;
+  margin-top: 2px;
+}
+
+.player {
+  font-size: 1.3em;
+  font-weight: 400;
+}
+
+.top-player {
+  width: 200px;
+}

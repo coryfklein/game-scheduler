@@ -150,9 +150,22 @@ $(document).ready(function () {
   var s = new CanvasState(document.getElementById('canvas'));
 
   var today = new Date();
-  var dd = today.getDate();
-  var mm = today.getMonth() + 1;
-  var yyyy = today.getFullYear();
+  var gameTimeToday = new Date(today.getTime());
+  gameTimeToday.setHours(12);
+  gameTimeToday.setMinutes(0);
+  var gameTimeTomorrow = new Date();
+  gameTimeTomorrow.setDate(gameTimeToday.getDate() + 1);
+  var nextGameDate = null;
+  if(today > gameTimeToday) {
+    nextGameTime = new Date(gameTimeTomorrow.getTime());
+  }
+  else {
+    nextGameTime = new Date(gameTimeToday.getTime());
+  }
+
+  var dd = nextGameTime.getDate();
+  var mm = nextGameTime.getMonth() + 1;
+  var yyyy = nextGameTime.getFullYear();
 
   var weekDay = today.getDay();
 
@@ -164,13 +177,17 @@ $(document).ready(function () {
     mm = '0' + mm;
   }
 
-  todayString = yyyy + '-' + mm + '-' + dd;
+  nextGameDateString = yyyy + '-' + mm + '-' + dd;
+
+  console.log('Right now it is', today);
+  console.log('Game time today is', gameTimeToday);
+  console.log('Next game time is', nextGameTime);
 
   fb.on('value', function(snapshot) {
     var data = snapshot.val();
-    if(data && data[todayString]) {
+    if(data && data[nextGameDateString]) {
 
-      var game = data[todayString];
+      var game = data[nextGameDateString];
       _this.game = game;
 
       s.setGame(game);
@@ -186,7 +203,7 @@ $(document).ready(function () {
       $('.playerFour').html(p4 || "&nbsp;");
 
       var playerName = getUserName();
-      var currentPlayerIsSignedUp = p1 === playerName || p2 === playerName || p3 === playerName || p4 === playerName
+      var currentPlayerIsSignedUp = playerName && (p1 === playerName || p2 === playerName || p3 === playerName || p4 === playerName);
       if(currentPlayerIsSignedUp) {
         $('.submit').hide();
         $('.exit').show();
@@ -196,8 +213,6 @@ $(document).ready(function () {
         $('.exit').hide();
       }
 
-      var gameTime = new Date();
-      gameTime.setHours(12, 10);
       var playerCount = 0;
       if(p1) playerCount++;
       if(p2) playerCount++;
@@ -216,15 +231,15 @@ $(document).ready(function () {
         $('.filled-message').show();
       }
       else {
-        if(today > gameTime) {
+        if(today > gameTimeToday) {
           $('.tomorrow').show();
         }
         $('.theButton').show();
       }
     }
     else {
-      console.log('No data for ' + todayString + ', creating new data.');
-      var todayRef = fb.child(todayString);
+      console.log('No data for ' + nextGameDateString + ', creating new data.');
+      var todayRef = fb.child(nextGameDateString);
       todayRef.set({
         'playerOne': '',
         'playerTwo': '',
@@ -239,7 +254,7 @@ $(document).ready(function () {
   $('.submit').bind('click', function() {
     var emptyPlayer = GetNextEmptyPlayer();
     if(emptyPlayer) {
-      var todayRef = fb.child(todayString);
+      var todayRef = fb.child(nextGameDateString);
       _this.game[emptyPlayer] = getUserName();
       todayRef.set(_this.game);
     }
@@ -248,7 +263,7 @@ $(document).ready(function () {
   $('.exit').bind('click', function() {
     var position = GetPlayerPosition(getUserName());
     if(position) {
-      var todayRef = fb.child(todayString);
+      var todayRef = fb.child(nextGameDateString);
       _this.game[position] = "";
       todayRef.set(_this.game);
     }
@@ -304,7 +319,7 @@ $(document).ready(function () {
   };
 
   var ClearPlayer = function(playerName) {
-      var todayRef = fb.child(todayString);
+      var todayRef = fb.child(nextGameDateString);
       _this.game[playerName] = "";
       todayRef.set(_this.game);
   }
